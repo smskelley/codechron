@@ -1,0 +1,39 @@
+{% load markup %}
+<br>
+
+{% for comment in comments %}
+<div id="comment{{ comment.id }}" class="comment">
+    <h4>{{ comment.author }} said on {{ comment.pub_date|date:"F jS Y" }}:</h4>
+    {{ comment.body|striptags|markdown }}
+</div>
+{% empty %}
+<div id="comment1">
+    <h4>Sorry!</h4>
+    <p>There's no comments yet, you should add one!</p>
+</div>
+{% endfor %}
+
+{% if ErrorMessage %}<div id="message"><p><strong>{{ ErrorMessage }}</strong></p></div>{% endif %}
+<form action="{% url "AjaxComments" PostId=PostId %}" method="post" id="FormAddComment">
+    {% csrf_token %}
+    <textarea maxlength="40" cols="40" name="name" id="NameField" placeholder="What's your name?"></textarea>
+    <textarea maxlength="1000" cols="80" name="comment" id="CommentField" placeholder="Insert comment..."></textarea><br>
+    <button id="SubmitComment">Submit</button>
+</form>
+{{ PostData }}
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#SubmitComment').click(function(event){
+        event.preventDefault();
+        $.post("{% url "AjaxComments" PostId=PostId %}", $("#FormAddComment").serialize())
+         .done(function(data) {
+            $('#Comments').html(data);
+            $('#message').hide().fadeIn(200);//.fadeIn(400);
+         })
+         .fail(function() {
+            $('#message strong').text("ERROR: Could not connect to server.").hide().fadeIn(200);
+         })
+        return false;
+    });
+});
+</script>

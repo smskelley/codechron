@@ -1,4 +1,11 @@
+#Django specific
 *.log
 *.pot
 *.pyc
+*.db
 local_settings.py
+settings.py
+
+#General
+*.swp
+.DS_store

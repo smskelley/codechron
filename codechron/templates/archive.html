@@ -1,0 +1,28 @@
+{% extends "index.html" %}
+
+{% block title %} Coding Chronicles Archive {% endblock %}
+
+{% block content %}
+    <div class="post" style="padding-top:25px;min-height:1000px;">
+    <h2>Archive</h2>
+    <hr style="float:left;width:200px;">
+    <br>
+    {% for post in AllPosts %}
+        {% ifchanged post.pub_date|date:"Y" %} 
+            <br><h2 class="ArchiveYear">{{post.pub_date|date:"Y"}}</h2>
+        {% endifchanged %}
+        {% ifchanged post.pub_date|date:"F" %} 
+            <div class="ArchiveYearContents">
+            <h3>{{post.pub_date|date:"F"}}</h3>
+            <ul>
+        {% endifchanged %}
+
+        <li><a href="{% url "ViewPost" PostId=post.id %}">{{ post.title }}</a>
+
+        {% ifchanged post.pub_date|date:"YF"%}
+            </ul>
+            </div>
+        {% endifchanged %}
+    {% endfor %}
+    </div>
+{% endblock %}

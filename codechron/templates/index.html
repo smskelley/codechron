@@ -1,0 +1,97 @@
+{% load markup %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Code Chronicles{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="title" content="{% block title2 %}Code Chronicles{% endblock %}">
+    <meta name="description" content="{% block description %}The examination of perspective.{% endblock %}">
+    <meta name="author" content="Sean Kelley">
+    <meta name="keywords" content="codechron, Code Chronicles, Sean Kelley">
+    <meta name="google-site-verification" content="kkCxzAbaLFeTgFJ_jfGSMyCWfM-kIIqEp2Ocgd2NA4s" />
+    <link type="text/css" rel="stylesheet" href="/static/blog.css">
+    <link href='http://fonts.googleapis.com/css?family=Advent+Pro:400,600,300|Average+Sans|BenchNine:300|Playfair+Display+SC' rel='stylesheet' type='text/css'>
+    <link rel="shortcut icon" href="http://www.codechron.com/static/favicon.ico" />
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script type="text/javascript">
+    $(window).load(function() {
+        {% if Post %}
+        $('#showComments').click(function(event){
+            event.preventDefault();
+            $('#Comments').load("{% url "AjaxComments" PostId=Post.id %}").toggle();
+            $('html, body').animate(
+                { scrollTop: $('#Comments').offset().top }
+            );
+        });
+        {% endif %}
+        $('#MenuToggle').click(function(event){
+            event.preventDefault();
+            $('#Menu').toggle();
+        });
+	});
+    </script>
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-40224312-1', 'codechron.com');
+        ga('send', 'pageview');
+
+    </script>
+</head>
+<body>
+<div id="page">
+
+<div id="top">
+    <h1><a href="/">Code Chronicles</a></h1>
+    <div class="line"><div class="line"></div></div>
+    <h2>An Experiment in Perspective Evolution</h2>
+    <div id="MenuToggle"><img height="26px" width="31px" src="/static/menu_button.gif"></div>
+</div>
+<div id="Menu">
+    <a href="{% url "Archive" %}">
+        <div class="MenuItem">Archive</div>
+    </a>
+    <a href="{% url "About" %}">
+        <div class="MenuItem">About</div>
+    </a>
+</div>
+<div id="right">
+    <a href="{% url "About" %}">
+        <h2>About</h2>
+    </a>
+    <hr>
+    <p>I am a father, husband, student, and an aspiring software developer.
+    [<a href="{% url "About" %}">more</a>]</p>
+    <a href="{% url "Archive" %}">
+        <h2>Archive</h2>
+    </a>
+    <hr>
+    <ul>
+    {% for apost in AllPosts %}
+    <li>
+        <a href="{% url "ViewPost" PostId=apost.id %}">{{ apost.title }}</a>
+    </li>
+    {% endfor %}
+    </ul>
+</div>
+
+<div id="main">
+    {% block content %}
+    <h2>
+        <a href="{% url "ViewPost" PostId=Post.id %}">{{ Post.title }}</a>
+    </h2>
+    <p class="date">{{Post.pub_date|date:"F jS Y" }}</p>
+    <hr>
+    <img alt="Network Cable" height="267px" src="/static/img/1/network_cable.jpg">
+    {{ Post.body|markdown }}
+    <a href="#"><div id="showComments">Comments</div></a>
+    <div id="Comments"></div>
+    {% endblock %}
+</div>
+
+</div>
+</body>
+</html>

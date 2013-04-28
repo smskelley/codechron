@@ -30,7 +30,7 @@ p, li{
     color: #404040;
 }
 
-ul {
+ul, ol {
     padding-left: 30px;
 }
 
